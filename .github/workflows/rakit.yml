@@ -1,0 +1,39 @@
+name: Buat Aplikasi Windows EXE
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Ambil System
+      uses: actions/checkout@v3
+
+    - name: Setup Python Windows
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Suntik Kode Downloader
+      run: |
+        echo 'import os' > jalan.py
+        echo 'print("=========================================")' >> jalan.py
+        echo 'print("  TOOL DOWNLOAD YOUTUBE AUTOMATIC MP4  ")' >> jalan.py
+        echo 'print("=========================================")' >> jalan.py
+        echo 'url = input("Masukkan Link Channel/Video: ").strip()' >> jalan.py
+        echo 'user_profile = os.environ.get("USERPROFILE", "C:\\Users\\Default")' >> jalan.py
+        echo 'out = f"{user_profile}\\Downloads"' >> jalan.py
+        echo 'print(f"\n[INFO] Video akan langsung disimpan ke folder Downloads PC.")' >> jalan.py
+        echo 'command = f"yt-dlp --sleep-interval 3 -f \"bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]\" --merge-output-format mp4 -o \"{out}\\%(title)s.%(ext)s\" \"{url}\""' >> jalan.py
+        echo 'os.system(command)' >> jalan.py
+        echo 'input("\nTekan Enter untuk keluar...")' >> jalan.py
+
+    - name: Install Pyinstaller dan YT-DLP
+      run: pip install pyinstaller yt-dlp
+
+    - name: Proses Rakit Jadi EXE
+      run: pyinstaller --onefile jalan.py
+
+    - name: Upload Hasil Aplikasi
+      uses: actions/upload-artifact@v3
+      with:
+        name: Downloader-Windows-EXE
+        path: dist/jalan.exe
